@@ -1,17 +1,17 @@
 function add(x, y) {
-  console.log("im in add func");
+  return x + y;
 }
 
 function subtract(x, y) {
-  console.log("im in sub func");
+  return x - y;
 }
 
 function multiply(x, y) {
-  console.log("im in mult func");
+  return x * y;
 }
 
 function divide(x, y) {
-  console.log("im in div func");
+  return x / y;
 }
 
 function operate(x, operator, y) {
@@ -33,10 +33,44 @@ function operate(x, operator, y) {
   }
 }
 
-function parse() {
-  const str = "2           + 2";
-  const [x, operator, y] = str.split(/\s+/);
+function cleanInput() {
+  values.length = 0; // []
+}
+
+function parse(str) {
+  let [x, y] = str.split(operatorRegex);
+  const operatorMatch = str.match(operatorRegex);
+  if (!operatorMatch) return cleanInput();
+  const operator = operatorMatch[0];
+  x = Number(x);
+  y = Number(y);
+  if (isNaN(x) || isNaN(y)) return cleanInput();
   operate(x, operator, y);
 }
 
-parse();
+let currNumber = "";
+const values = [];
+const validOperators = ["+", "-", "*", "/"];
+const operatorRegex = /[+\-*/]/;
+
+const display = document.querySelector("#display");
+display.addEventListener("click", (e) => {
+  const val = e.target.value;
+  if (!isNaN(val)) { // if it's a digit
+    currNumber += val;
+  } else if (validOperators.includes(val)) {
+    if (currNumber) {
+      values.push(currNumber);
+    }
+    if (values.some((el) => validOperators.includes(el)) || !values.length) {
+      return;
+    }
+    values.push(val); // operator
+    currNumber = "";
+  }
+  // eval with = or auto-eval and send it to parse
+});
+// if (values.length === 3) {
+//   const str = values.join("");
+//   parse(str);
+// }
