@@ -1,5 +1,9 @@
 function add(x, y) {
-  return x + y;
+  const res = x + y;
+  cleanInput();
+  values.push(res);
+  console.log(res);
+  // return x + y;
 }
 
 function subtract(x, y) {
@@ -62,15 +66,27 @@ display.addEventListener("click", (e) => {
     if (currNumber) {
       values.push(currNumber);
     }
-    if (values.some((el) => validOperators.includes(el)) || !values.length) {
+    if (!values.length) return;
+    // if the index is 1 and user presses any other operator update the operator
+    const index = values.findIndex((el) => validOperators.includes(el));
+    if (index !== -1 && values.length === 2) {
+      values[index] = val;
       return;
     }
+
     values.push(val); // operator
     currNumber = "";
   }
   // eval with = or auto-eval and send it to parse
 });
+// old solution
 // if (values.length === 3) {
 //   const str = values.join("");
 //   parse(str);
 // }
+
+// if (values.some((el) => validOperators.includes(el))) {
+//   return;
+// }
+
+// TODO HANDLE / 0
