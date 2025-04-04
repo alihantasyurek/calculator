@@ -22,20 +22,22 @@ function updateCurr() {
     currNumber = returnVal;
   }
 }
+
 function checkSpecialInputs(val) {
+  updateCurr();
   if (val === "clear") {
     fullClear();
     return true;
   } else if (val === "remove") {
     if (currNumber) {
-      if (currNumber.slice(-1) === ".") isPointEnabled = true;
+      if (currNumber.at(-1) === ".") isPointEnabled = true;
       currNumber = currNumber.slice(0, -1);
+      returnVal &&= currNumber;
       display.textContent = currNumber || "0";
       return true;
     }
   } else if (val === "point") {
     if (isPointEnabled) {
-      updateCurr();
       currNumber += currNumber ? "." : "0.";
       display.textContent = currNumber;
       isPointEnabled = false;
