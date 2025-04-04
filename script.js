@@ -80,7 +80,7 @@ function handleInput(val) {
 
 function processOperator(isOperator, val) {
   pushNum();
-  pushVal(val);
+  pushVal(isOperator, val);
   callParse();
   handleReturn(isOperator, val);
 }
@@ -105,17 +105,26 @@ function fullClear() {
   currNumber = "";
   display.textContent = 0;
   isPointEnabled = true;
+  if (activeBtn) {
+    activeBtn.classList.remove("active");
+  }
 }
 
 const operatorButtons = document.querySelectorAll(".buttons.operations");
-function pushVal(val) {
+let activeBtn = null;
+function pushVal(isOperator, val) {
   if (values.length > 0 && values.length < 2) {
     values.push(val);
   }
-  operatorButtons.forEach((btn) => {
-    const isActive = btn.value.includes(val);
-    btn.classList.toggle("active", isActive);
-  });
+  if (isOperator) {
+    operatorButtons.forEach((btn) => {
+      const isThisBtn = btn.value === val;
+      if (isThisBtn) activeBtn = btn;
+      btn.classList.toggle("active", isThisBtn);
+    });
+  } else {
+    activeBtn.classList.remove("active");
+  }
 }
 
 function pushNum() {
