@@ -1,9 +1,10 @@
 let currNumber = "";
-const maxValidNum = 11;
+const maxValidNum = 10;
 const values = [];
 let isPointEnabled = true;
 const validOperators = ["+", "-", "*", "/"];
 const operatorRegex = /[+\-*/]/;
+let returnVal = null;
 const display = document.querySelector("#display");
 display.textContent = 0;
 const body = document.querySelector("#body");
@@ -41,13 +42,11 @@ function checkSpecialInputs(val) {
     return true;
   } else if (val === "Backspace") {
     if (isCurrEmpty) updateCurr();
-    // if (currNumber) {
     if (currNumber.at(-1) === ".") isPointEnabled = true;
     currNumber = currNumber.slice(0, -1);
     returnVal &&= currNumber;
     display.textContent = currNumber || "0";
     return true;
-    // }
   } else if (val === "point") {
     if (isPointEnabled) {
       if (isCurrEmpty) updateCurr();
@@ -143,6 +142,7 @@ function callParse() {
 }
 
 function parse(str) {
+  if (str[0] === "-") str = str.slice(1, str.length);
   let [x, y] = str.split(operatorRegex);
   const operatorMatch = str.match(operatorRegex);
   if (!operatorMatch) return cleanInput();
@@ -153,7 +153,6 @@ function parse(str) {
   operate(x, operator, y);
 }
 
-let returnVal = null;
 function add(x, y) {
   const res = x + y;
   resStr = res.toString();
@@ -161,9 +160,12 @@ function add(x, y) {
   if (resStr.length > maxValidNum) {
     const check = resStr.includes(".") || resStr.includes("-");
     resStr = check ? resStr.slice(0, maxValidNum) : "9".repeat(maxValidNum);
+    returnVal = resStr;
+    display.textContent = resStr;
+  } else {
+    returnVal = res;
+    display.textContent = res;
   }
-  returnVal = resStr;
-  display.textContent = resStr;
 }
 
 function subtract(x, y) {
@@ -173,9 +175,12 @@ function subtract(x, y) {
   if (resStr.length > maxValidNum) {
     const check = resStr.includes(".") || resStr.includes("-");
     resStr = check ? resStr.slice(0, maxValidNum) : "9".repeat(maxValidNum);
+    returnVal = resStr;
+    display.textContent = resStr;
+  } else {
+    returnVal = res;
+    display.textContent = res;
   }
-  returnVal = resStr;
-  display.textContent = resStr;
 }
 
 function multiply(x, y) {
