@@ -15,6 +15,7 @@ body {
   min-height: 500px;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 #body {
@@ -54,11 +55,11 @@ body {
   transition: background-color 0.2s ease;
 }
 
-.operations:hover {
-  background-color: #e69500;
+.operations:hover, .operations.active, .equal:hover{
+  background-color: #b37400;
 }
 
-.operations {
+.operations, .equal {
   background-color: orange;
 }
 
@@ -66,3 +67,19 @@ body {
   flex-basis: 50%;
 }
 
+#body, #body:focus {
+  outline: none;
+}
+
+div.info {
+  outline: 1px blue dotted;
+  margin-top: 32px;
+  padding: 16px;
+  border-radius: 12px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 6px 12px rgba(30, 144, 255, 0.3);
+}
+
+div.info p {
+  text-align: center;
+}

@@ -1,6 +1,7 @@
 let currNumber = "";
 const maxValidNum = 11;
 const values = [];
+let isPointEnabled = true;
 const validOperators = ["+", "-", "*", "/"];
 const operatorRegex = /[+\-*/]/;
 const display = document.querySelector("#display");
@@ -10,6 +11,16 @@ const body = document.querySelector("#body");
 body.addEventListener("click", (e) => {
   const val = e.target.value;
   if (val) {
+    handleInput(val);
+  }
+});
+
+const buttons = document.querySelectorAll("button[value]");
+const keys = Array.from(buttons).map((elem) => elem.value);
+body.addEventListener("keydown", (e) => {
+  const val = e.key;
+  e.preventDefault();
+  if (keys.includes(val)) {
     handleInput(val);
   }
 });
@@ -24,20 +35,22 @@ function updateCurr() {
 }
 
 function checkSpecialInputs(val) {
-  updateCurr();
-  if (val === "clear") {
+  const isCurrEmpty = !currNumber;
+  if (val === "Escape") {
     fullClear();
     return true;
-  } else if (val === "remove") {
-    if (currNumber) {
-      if (currNumber.at(-1) === ".") isPointEnabled = true;
-      currNumber = currNumber.slice(0, -1);
-      returnVal &&= currNumber;
-      display.textContent = currNumber || "0";
-      return true;
-    }
+  } else if (val === "Backspace") {
+    if (isCurrEmpty) updateCurr();
+    // if (currNumber) {
+    if (currNumber.at(-1) === ".") isPointEnabled = true;
+    currNumber = currNumber.slice(0, -1);
+    returnVal &&= currNumber;
+    display.textContent = currNumber || "0";
+    return true;
+    // }
   } else if (val === "point") {
     if (isPointEnabled) {
+      if (isCurrEmpty) updateCurr();
       currNumber += currNumber ? "." : "0.";
       display.textContent = currNumber;
       isPointEnabled = false;
@@ -47,7 +60,6 @@ function checkSpecialInputs(val) {
   return false;
 }
 
-let isPointEnabled = true;
 function handleInput(val) {
   const isOperator = validOperators.includes(val);
   if (checkSpecialInputs(val)) return;
@@ -95,10 +107,15 @@ function fullClear() {
   isPointEnabled = true;
 }
 
+const operatorButtons = document.querySelectorAll(".buttons.operations");
 function pushVal(val) {
   if (values.length > 0 && values.length < 2) {
     values.push(val);
   }
+  operatorButtons.forEach((btn) => {
+    const isActive = btn.value.includes(val);
+    btn.classList.toggle("active", isActive);
+  });
 }
 
 function pushNum() {
@@ -199,3 +216,14 @@ function cleanInput() {
   values.length = 0; // []
   display.textContent = "";
 }
+
+function maintainFocus() {
+  if (document.activeElement !== body) {
+    setTimeout(() => {
+      body.focus();
+    }, 0);
+  }
+}
+
+body.addEventListener("blur", maintainFocus);
+maintainFocus();

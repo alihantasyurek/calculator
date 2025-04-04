@@ -11,9 +11,9 @@
 <body>
   <div id="container">
     <div id="display"></div>
-    <div id="body">
-      <button class="buttons bigger" value="clear">C</button>
-      <button class="buttons " value="remove">⌫</button>
+    <div id="body" tabindex="-1">
+      <button class="buttons bigger" value="Escape">C</button>
+      <button class="buttons " value="Backspace">⌫</button>
       <button class="buttons operations" value="/">/</button>
       <button class="buttons" value="7">7</button>
       <button class="buttons" value="8">8</button>
@@ -29,8 +29,13 @@
       <button class="buttons operations" value="+">+</button>
       <button class="buttons bigger" value="0">0</button>
       <button class="buttons" value="point">.</button>
-      <button class="buttons operations" value="=">=</button>
+      <button class="buttons equal" value="=">=</button>
     </div>
+  </div>
+  <div class="info">
+    <p>Keyboard input is supported </p>
+    <p>Escape to reset | Backspace to delete</p>
+    <p>Press any supported calculator key to begin.</p>
   </div>
 
   <script src="script.js"></script>
