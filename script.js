@@ -31,8 +31,8 @@ function updateCurr() {
     if (returnVal.includes(".")) {
       isPointEnabled = false;
     }
-    currNumber = returnVal;
   }
+  if (returnVal) currNumber = returnVal;
 }
 
 function checkSpecialInputs(val) {
@@ -48,8 +48,8 @@ function checkSpecialInputs(val) {
     display.textContent = currNumber || "0";
     return true;
   } else if (val === "point") {
+    if (isCurrEmpty) updateCurr();
     if (isPointEnabled) {
-      if (isCurrEmpty) updateCurr();
       currNumber += currNumber ? "." : "0.";
       display.textContent = currNumber;
       isPointEnabled = false;
@@ -142,50 +142,55 @@ function callParse() {
 }
 
 function parse(str) {
-  if (str[0] === "-") str = str.slice(1, str.length);
+  let isNegative = false;
+  if (str.startsWith("-")) {
+    isNegative = true;
+    str = str.slice(1);
+  }
+
   let [x, y] = str.split(operatorRegex);
   const operatorMatch = str.match(operatorRegex);
   if (!operatorMatch) return cleanInput();
   const operator = operatorMatch[0];
+
   x = Number(x);
   y = Number(y);
+
   if (isNaN(x) || isNaN(y)) return cleanInput();
+  if (isNegative) {
+    x *= -1;
+    isNegative = false;
+  }
   operate(x, operator, y);
 }
 
 function add(x, y) {
   const res = x + y;
-  resStr = res.toString();
+  resStr = res.toString().includes(".") ? res.toFixed(2) : res.toString();
   cleanInput();
   if (resStr.length > maxValidNum) {
     const check = resStr.includes(".") || resStr.includes("-");
     resStr = check ? resStr.slice(0, maxValidNum) : "9".repeat(maxValidNum);
-    returnVal = resStr;
-    display.textContent = resStr;
-  } else {
-    returnVal = res;
-    display.textContent = res;
   }
+  returnVal = resStr;
+  display.textContent = resStr;
 }
 
 function subtract(x, y) {
   const res = x - y;
-  resStr = res.toString();
+  resStr = res.toString().includes(".") ? res.toFixed(2) : res.toString();
   cleanInput();
   if (resStr.length > maxValidNum) {
     const check = resStr.includes(".") || resStr.includes("-");
     resStr = check ? resStr.slice(0, maxValidNum) : "9".repeat(maxValidNum);
-    returnVal = resStr;
-    display.textContent = resStr;
-  } else {
-    returnVal = res;
-    display.textContent = res;
   }
+  returnVal = resStr;
+  display.textContent = resStr;
 }
 
 function multiply(x, y) {
   const res = x * y;
-  resStr = res.toString();
+  resStr = res.toString().includes(".") ? res.toFixed(2) : res.toString();
   cleanInput();
   if (resStr.length > maxValidNum) {
     const check = resStr.includes(".") || resStr.includes("-");
@@ -197,7 +202,7 @@ function multiply(x, y) {
 
 function divide(x, y) {
   const res = x / y;
-  resStr = res.toString();
+  resStr = res.toString().includes(".") ? res.toFixed(2) : res.toString();
   cleanInput();
   if (resStr.length > maxValidNum) {
     const check = resStr.includes(".") || resStr.includes("-");
